@@ -42,15 +42,21 @@ export const play = {
 
     let player = musicPlayers.get(interaction.guildId!);
 
-    if (!player) {
+    if (!player || !player.isConnectionValid()) {
       const connection = joinVoiceChannel({
         channelId: voiceChannel.id,
         guildId: interaction.guildId!,
         adapterCreator: voiceChannel.guild.voiceAdapterCreator,
       });
 
-      player = new MusicPlayer(connection);
+      player = new MusicPlayer(connection, interaction.guildId!);
       musicPlayers.set(interaction.guildId!, player);
+      
+      player.onQueueEnd = () => {
+        console.log(`🎵 Queue ended for guild ${interaction.guildId}, cleaning up...`);
+        player?.stop();
+        musicPlayers.delete(interaction.guildId!);
+      };
     }
 
     await player.addTrack(track);

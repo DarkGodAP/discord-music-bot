@@ -16,10 +16,13 @@ export class MusicPlayer {
   public audioPlayer: AudioPlayer;
   public voiceConnection: VoiceConnection;
   public volume: number = 0.5;
+  public guildId: string;
   private isPlaying: boolean = false;
+  public onQueueEnd?: () => void;
 
-  constructor(voiceConnection: VoiceConnection) {
+  constructor(voiceConnection: VoiceConnection, guildId: string) {
     this.voiceConnection = voiceConnection;
+    this.guildId = guildId;
     this.audioPlayer = createAudioPlayer();
     
     this.voiceConnection.subscribe(this.audioPlayer);
@@ -51,6 +54,10 @@ export class MusicPlayer {
   async playNext() {
     if (this.queue.length === 0) {
       this.currentTrack = null;
+      console.log(`✅ Queue finished for guild ${this.guildId}`);
+      if (this.onQueueEnd) {
+        this.onQueueEnd();
+      }
       return;
     }
     
@@ -70,6 +77,11 @@ export class MusicPlayer {
       console.error('❌ Error playing track:', error);
       this.playNext();
     }
+  }
+
+  isConnectionValid(): boolean {
+    return this.voiceConnection.state.status !== VoiceConnectionStatus.Destroyed && 
+           this.voiceConnection.state.status !== VoiceConnectionStatus.Disconnected;
   }
 
   pause() {
