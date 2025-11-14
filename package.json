@@ -10,7 +10,24 @@
     "dev": "tsc && node dist/index.js",
     "watch": "tsc -w"
   },
-  "keywords": ["discord", "music", "bot", "spotify", "youtube"],
+  "keywords": [
+    "discord",
+    "music",
+    "bot",
+    "spotify",
+    "youtube"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.10.0",
+    "@discordjs/voice": "^0.18.0",
+    "@types/node": "^24.10.1",
+    "discord.js": "^14.24.2",
+    "ffmpeg-static": "^5.2.0",
+    "opusscript": "^0.0.8",
+    "play-dl": "^1.9.7",
+    "spotify-web-api-node": "^5.0.2",
+    "typescript": "^5.9.3"
+  }
 }
